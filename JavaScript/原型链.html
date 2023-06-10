@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Title</title>
+</head>
+<body>
+  <script>
+    function Person() {}
+    const zxw = new Person()
+    console.log(zxw)
+    console.log(zxw.__proto__ === Person.prototype)
+    console.log(Person.prototype.__proto__ === Object.prototype)
+    console.log(zxw instanceof Person)
+    console.log(zxw instanceof Object)
+    console.log(zxw instanceof Array)
+  </script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Title</title>
+</head>
+<body>
+  <script>
+	  const Person = {
+			  head: 1
+	  }
+	  function Man() {
+	  }
+	  Man.prototype = Person
+	  Man.prototype.constructor = Man
+	  const Pink = new Man()
+    console.log(Pink)
+  </script>
+</body>
+</html>

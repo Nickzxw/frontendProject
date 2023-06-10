@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>注册页面</title>
+	<style>
+		.login {
+			width: 500px;
+		}
+	</style>
+</head>
+<body>
+	<h2>Log in</h2>
+	<table class="login">
+		<tr class="sexTable">
+			<td>Sex :</td>
+			<td>
+				<input type="radio" name="sex">Male
+				<input type="radio" name="sex">Female
+			</td>
+		</tr>
+		<tr class="birth">
+			<td>Bitrhday</td>
+			<td>
+				<select name="year" id="year">
+					<option value="2001">2001</option>
+					<option value="2002">2002</option>
+					<option value="2003">2003</option>
+				</select>
+				<select name="month" id="month">
+					<option value="2001">2001</option>
+					<option value="2002">2002</option>
+					<option value="2003">2003</option>
+				</select>
+				<select name="day" id="day">
+					<option value="2001">2001</option>
+					<option value="2002">2002</option>
+					<option value="2003">2003</option>
+				</select>
+			</td>
+		</tr>
+		<tr class="likeType">
+			<td>type: </td>
+			<td>
+				<input type="checkbox" checked="checked"> 1
+				<input type="checkbox" name="love"> 2
+				<input type="checkbox" name="love"> 3
+				<input type="checkbox" name="love"> 4
+			</td>
+		</tr>
+		<tr class="text">
+			<td>
+				self:
+			</td>
+			<td>
+				<textarea></textarea>
+			</td>
+
+		</tr>
+		<tr class="loginButtton">
+			<td></td>
+			<td>
+				<input type="button" value="Login">
+			</td>
+		</tr>
+	</table>
+</body>
+</html>

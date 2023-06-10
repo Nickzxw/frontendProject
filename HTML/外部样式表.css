@@ -1,0 +1,10 @@
+.box{
+    width: 500px;
+    height: 500px;
+    background-color: cadetblue;
+}
+p{
+    color: aliceblue;
+    text-align: center;
+    text-transform: capitalize; /*capitalize 首字母大写；uppercase大写；lowercase 小写*/
+}

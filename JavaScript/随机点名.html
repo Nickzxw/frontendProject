@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Title</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+    /*清除浮动*/
+    .clearfix:before, .clearfix:after {
+      content: "";
+      display: table;
+    }
+    .clearfix:after {
+      clear: both;
+    }
+    .clearfix {
+      *zoom: 1;
+    }
+    span {
+      float: left;
+    }
+    .qs {
+      float: left;
+    }
+  </style>
+</head>
+<body>
+  <h2>随机点名</h2>
+  <div class="box clearfix">
+    <span>名字是：</span>
+    <div class="qs">显示姓名</div>
+  </div>
+  <div class="btns">
+    <button class="start">开始</button>
+    <button class="end">结束</button>
+  </div>
+  <script>
+    // 数组
+    const arr = ['1', '2', '3', '4', '5']
+    let timeID = 0
+    const start = document.querySelector('.start')
+    const end = document.querySelector('.end')
+    const qs = document.querySelector('.qs')
+    start.addEventListener('click', function() {
+      timeID = setInterval(function(){
+        const random = parseInt(Math.random() * arr.length)
+        qs.innerHTML = arr[random]
+      }, 35)
+    })
+    end.addEventListener('click', function() {
+      clearInterval(timeID)
+      arr.splice(random, 1)
+    })
+
+  </script>
+</body>
+</html>
