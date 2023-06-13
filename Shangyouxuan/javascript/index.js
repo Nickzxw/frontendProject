@@ -220,6 +220,186 @@ window.onload = function () {
         rightTop.innerHTML = strs
     }
     
+    // 商品参数动态渲染
+    function rightBottomData() {
+        let chooseWrap = document.querySelector('.chooseWrap')
+        let crumData = goodData.goodsDetail.crumbData
+        for (let i = 0; i < crumData.length; i++) {
+            let dlNode = document.createElement('dl')
+            let dtNode = document.createElement('dt')
+            dtNode.innerHTML = crumData[i].title
+            dlNode.appendChild(dtNode)
+            for (let j = 0; j < crumData[i].data.length; j++) {
+                let ddNode = document.createElement('dd')
+                ddNode.innerHTML = crumData[i].data[j].type
+                ddNode.setAttribute('price', crumData[i].data[j].changePrice)
+                dlNode.appendChild(ddNode)
+            }
+            chooseWrap.appendChild(dlNode)
+        }
+    }
+    
+    // 颜色排他效果
+    function clickddBind() {
+        let dlNodes = document.querySelectorAll('#right > div.rightBottom > div > dl')
+        let arr = new Array(dlNodes.length)
+        let choose = document.querySelector('#right > div.rightBottom > div.choose')
+        arr.fill(0)
+        // let 具有块级作用域，如果使用var定义的话则需要添加闭包函数
+        for (let k = 0; k < dlNodes.length; k++) {
+            let ddNodes = dlNodes[k].querySelectorAll('dd')
+            for (let i = 0; i < ddNodes.length; i++) {
+                ddNodes[i].onclick = function() {
+                    choose.innerHTML = ""
+                    for (let j = 0; j < ddNodes.length; j++) {
+                        // 先重置所有元素的颜色
+                        ddNodes[j].style.color = "#666"
+                    }
+                    // 点击哪个dd就变色
+                    this.style.color = "red"
+                    // 点击dd元素产生对应的mark元素
+                    arr[k] = this
+                    changePriceBind(arr)
+                    arr.forEach(function(value, index) {
+                        if (value) {
+                            //创建div元素
+                            let markDiv = document.createElement('div')
+                            markDiv.className = 'mark'
+                            markDiv.innerText = value.innerText
+                            // 创建a元素
+                            let aNode = document.createElement('a')
+                            aNode.innerText = 'X'
+                            aNode.setAttribute('index', index.toString())
+                            // 追加
+                            markDiv.appendChild(aNode)
+                            // 让 choose元素追加 div
+                            choose.appendChild(markDiv)
+                        }
+                    })
+                    // 获取所有 a 标签元素 循环发生点击事件
+                    let aNodes = document.querySelectorAll('#right > div.rightBottom > div.choose > div.mark > a')
+                    for (let n = 0; n < aNodes.length; n++) {
+                        aNodes[n].onclick = function () {
+                            let idx = aNodes[n].getAttribute('index')
+                            arr[idx] = 0
+                            
+                            let ddList = dlNodes[idx].querySelectorAll('dd')
+                            for (let m = 0; m < ddList.length; m++) {
+                                ddList[m].style.color = "#666"
+                            }
+                            ddList[0].style.color = "#ea4a36"
+                            choose.removeChild(this.parentNode)
+                            
+                            // 调用价格函数
+                            changePriceBind(arr)
+                        }
+                    }
+                    
+                    
+
+                }
+            }
+        }
+    }
+    
+    //价格变动函数
+    function changePriceBind(arr) {
+        let oldPrice = document.querySelector('#right > div.rightTop > div.priceWrap > div.priceTop > div > p')
+        // 默认价格
+        let price = goodData.goodsDetail.price
+        for (let i = 0; i < arr.length; i++) {
+            if (arr[i]) {
+                let changePrice = Number(arr[i].getAttribute('price'))
+                price += changePrice
+            }
+        }
+        oldPrice.innerText = price
+        
+        // 变换后的价格写入标签
+        let leftPrice = document.querySelector('#contentMain > div.goodDetailWrap > div > div > div > div.left > p')
+        leftPrice.innerText = '￥' + price
+        let newPrice = document.querySelector('#contentMain > div.goodDetailWrap > div > div > div > div.right > i')
+        let ipts = document.querySelectorAll('#wrapper #content #contentMain .goodDetailWrap .rightDetail .chooseBox .listWrap .middle li input')
+        for (let i = 0; i < ipts.length; i++) {
+            if (ipts[i].checked) {
+                price += Number(ipts[i].value)
+            }
+        }
+        newPrice.innerText = '￥' + price
+    }
+    
+    // 选择搭配复选框选中后套餐变动
+    function choosePrice() {
+        let ipts = document.querySelectorAll('#wrapper #content #contentMain .goodDetailWrap .rightDetail .chooseBox .listWrap .middle li input')
+        // 左侧价格
+        let leftPrice = document.querySelector('#contentMain > div.goodDetailWrap > div > div > div > div.left > p')
+        // 套餐价
+        let newPrice = document.querySelector('#contentMain > div.goodDetailWrap > div > div > div > div.right > i')
+        for (let i = 0; i < ipts.length; i++) {
+            ipts[i].onclick = () => {
+                let oldPrice = Number(leftPrice.innerText.slice(1))
+                for(let j = 0; j < ipts.length; j++) {
+                    if(ipts[i].checked) {
+                        // 新的价格
+                        oldPrice = oldPrice + Number(ipts[i].value)
+                    }
+                }
+                newPrice.innerHTML = "￥" + oldPrice
+            }
+        }
+        
+    }
+    
+    // 封装一个公共的选项卡函数
+    function Tab(tabBtns, tabContent) {
+        for (let i = 0; i < tabBtns.length; i++) {
+            tabBtns[i].index = i
+            tabBtns[i].onclick = function () {
+                for (let j = 0; j < tabBtns.length; j++) {
+                    tabBtns[j].className = ''
+                    tabContent[j].className = ''
+                }
+                tabBtns[i].className = 'active'
+                tabContent[this.index].className = 'active'
+            }
+        }
+    }
+    
+    // 点击左侧选项卡
+    function leftTab() {
+        // 被点击的元素
+        let h4s = document.querySelectorAll('#contentMain > div.goodDetailWrap > aside > div.asideTop > h4')
+        // 切换显示的元素
+        let divs = document.querySelectorAll('#contentMain > div.goodDetailWrap > aside > div.asideContent > div')
+        Tab(h4s, divs)
+    }
+    
+    //点击右侧选项卡
+    function rightTab() {
+        let lis = document.querySelectorAll('#wrapper #content #contentMain .goodDetailWrap .rightDetail .bottomDetail .tabBtns li')
+        let divs = document.querySelectorAll(' #contentMain > div.goodDetailWrap > div > div.bottomDetail > div > div')
+        Tab(lis, divs)
+    }
+    
+    //右边侧边栏点击效果
+    function rightAsideClick() {
+        let rightClick = document.querySelector('#wrapper > div.rightAside.asideClose > div.btns.btnsClose')
+        let rightContent = document.querySelector('#wrapper > div.rightAside.asideClose')
+        // 初始状态为关闭状态
+        let flag = true
+        rightClick.onclick = function () {
+            if (flag) {
+                rightClick.className = 'btns btnsOpen'
+                rightContent.className = 'rightAside asideOpen'
+                flag = false
+            } else {
+                rightClick.className = 'btns btnsClose'
+                rightContent.className = 'rightAside asideClose'
+                flag = true
+            }
+        }
+    }
+    
     //路径导航数据动态渲染
     navPathDataBine()
     //放大镜移入移出
@@ -232,6 +412,16 @@ window.onload = function () {
     thumbnailLeftRightClick()
     // 商品详情数据动态渲染
     rightTopData()
-    
-    
+    // 商品参数数据渲染
+    rightBottomData()
+    // dd元素点击排他
+    clickddBind()
+    // 选择搭配复选框选中后套餐变动
+    choosePrice()
+    // 点击左侧选项卡
+    leftTab()
+    //点击右侧选项卡
+    rightTab()
+    // 右边侧边栏点击
+    rightAsideClick()
 }
